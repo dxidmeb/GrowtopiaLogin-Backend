@@ -1,200 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growtopia - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap');
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Ubuntu', sans-serif;
             background: transparent;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .game-panel {
-            background: #2b4d6d;
-            border: 5px solid #87b8cc;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            border-radius: 12px;
+        /* The Classic GT Dialog Box */
+        .gt-dialog {
+            width: 300px;
+            background-color: #2b4d6d; /* Dark GT Blue */
+            border: 4px solid #87b8cc; /* Light GT Blue border */
+            border-radius: 10px;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.4);
+            padding: 20px;
         }
 
-        .input-group {
-            background: #1a334d;
+        .gt-title {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 0px #000;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .gt-label {
+            color: #FFC045; /* Classic GT Yellow/Tan */
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+        }
+
+        .gt-input {
+            background-color: #1a334d;
             border: 2px solid #5489a3;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
+            border-radius: 6px;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
         }
 
-        .input-group:focus-within {
+        .gt-input:focus {
             border-color: #00b8ff;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 184, 255, 0.4);
         }
 
-        .btn-primary {
-            background: linear-gradient(180deg, #00b8ff 0%, #008ecc 100%);
-            border: 1px solid #00d4ff;
+        /* NEW Blue/Cyan Action Button */
+        .gt-btn-main {
+            background: linear-gradient(180deg, #00d4ff 0%, #008ecc 100%);
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            padding: 12px;
+            width: 100%;
+            text-shadow: 1px 1px 2px #000;
             box-shadow: 0 4px 0 #005f8f;
-            transition: all 0.1s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 5px;
+            transition: transform 0.1s;
         }
 
-        .btn-primary:hover {
-            filter: brightness(1.1);
+        .gt-btn-main:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #005f8f;
         }
 
-        .btn-primary:active {
-            box-shadow: 0 0px 0 #005f8f;
-            transform: translateY(4px);
+        .gt-btn-register {
+            background: #4a6a8a;
+            border: 2px solid #87b8cc;
+            border-radius: 8px;
+            color: #d1e5ef;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 8px;
+            width: 100%;
+            margin-top: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0.9;
         }
 
-        /* Secondary button style for Guest */
-        .btn-secondary {
-            background: #1a334d;
-            border: 1px solid #5489a3;
-            box-shadow: 0 4px 0 #0d1a29;
-            transition: all 0.1s ease;
+        .gt-btn-register:hover {
+            opacity: 1;
+            background: #54799d;
         }
-
-        .btn-secondary:hover {
-            background: #244669;
-        }
-
-        .btn-secondary:active {
-            box-shadow: 0 0px 0 #0d1a29;
-            transform: translateY(4px);
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .error-text {
+            color: #ff5555;
+            font-size: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
     </style>
 </head>
+<body>
 
-<body class="flex flex-col items-center justify-center h-screen m-0">
-    <div class="relative flex justify-center items-center w-full px-4">
-        <div id="loginModal"
-            class="game-panel relative p-8 w-full max-w-md flex flex-col justify-center opacity-0 translate-y-[-20px] transition-all duration-700 ease-out">
+    <div class="gt-dialog">
+        <div class="gt-title">SERVER LOGIN</div>
+        
+        <div id="errorBox" class="hidden error-text text-shadow">Invalid GrowID or Password</div>
+
+        <form id="loginForm" method="POST" action="/player/growid/login/validate">
+            <input name="type" value="log" type="hidden" />
+            <input name="_token" value="{{ data }}" type="hidden" />
+
+            <label class="gt-label">GrowID</label>
+            <input type="text" name="growId" id="loginGrowId" class="gt-input" placeholder="Name">
+
+            <label class="gt-label">Password</label>
+            <input type="password" name="password" id="loginPassword" class="gt-input" placeholder="Password">
+
+            <button type="submit" class="gt-btn-main">Connect</button>
             
-            <div class="text-center mb-6">
-                <h1 class="text-white font-bold text-2xl tracking-wide">LOG IN</h1>
-                <p class="text-[#87b8cc] text-[11px] font-bold uppercase tracking-widest mt-1">Use your Grow ID</p>
-            </div>
-
-            <div id="errorDiv"
-                class="hidden mb-4 p-3 bg-red-900/40 border-2 border-red-500 rounded text-red-200 text-xs font-bold text-center">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                <a id="errorMessage"></a>
-            </div>
-
-            <form method="post" action="/player/growid/login/validate" accept-charset="UTF-8" id="loginForm"
-                class="space-y-5">
-                <input name="type" value="log" type="hidden" />
-                <input name="_token" value="{{ data }}" type="hidden" />
-
-                <div class="space-y-1.5">
-                    <label for="loginGrowId" class="block text-white text-[10px] font-bold uppercase ml-1 opacity-80">GrowID</label>
-                    <div class="input-group flex items-center rounded-lg px-4 py-2.5">
-                        <i class="fas fa-user text-[#87b8cc] mr-3 text-sm"></i>
-                        <input type="text" name="growId" id="loginGrowId"
-                            class="w-full bg-transparent text-white text-sm placeholder-[#5489a3] focus:outline-none"
-                            placeholder="GrowID">
-                    </div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label for="loginPassword" class="block text-white text-[10px] font-bold uppercase ml-1 opacity-80">Password</label>
-                    <div class="input-group flex items-center rounded-lg px-4 py-2.5">
-                        <i class="fas fa-lock text-[#87b8cc] mr-3 text-sm"></i>
-                        <input type="password" name="password" id="loginPassword"
-                            class="w-full bg-transparent text-white text-sm placeholder-[#5489a3] focus:outline-none"
-                            placeholder="Password">
-                        <button type="button" id="toggleLogPassword" class="text-[#87b8cc] hover:text-white ml-2 focus:outline-none transition-colors">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="pt-2 flex flex-col gap-4">
-                    <button id="loginButton" type="submit"
-                        class="btn-primary w-full py-3 rounded-lg text-white font-bold text-sm tracking-wide uppercase transition-all">
-                        Login
-                    </button>
-                    
-                    <button id="guestButton" type="button" onclick="guest(this)"
-                        class="btn-secondary w-full py-3 rounded-lg text-[#87b8cc] font-bold text-sm tracking-wide uppercase transition-all">
-                        Play as Guest
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button type="button" onclick="window.location='/register'" class="gt-btn-register">
+                Register New GrowID
+            </button>
+        </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (localStorage.getItem('growId')) {
-                document.getElementById('loginGrowId').value = localStorage.getItem('growId');
-            }
-
-            setTimeout(function() {
-                const modal = document.getElementById('loginModal');
-                if (modal) {
-                    modal.classList.remove('opacity-0', 'translate-y-[-20px]');
-                    modal.classList.add('fade-in');
-                }
-            }, 100);
-        });
-
-        // Extracted Guest Function
-        function guest(e) {
-            const loginForm = document.getElementById('loginForm');
-            document.getElementById('loginGrowId').value = "";
-            document.getElementById('loginPassword').value = "";
-
-            loginForm.submit();
-            localStorage.setItem('growId', "");
-        }
-
-        document.getElementById('loginButton').addEventListener('click', function (event) {
-            event.preventDefault();
-
-            const loginForm = document.getElementById('loginForm');
-            const uName = document.getElementById('loginGrowId').value;
-            const uPass = document.getElementById('loginPassword').value;
-
-            if (!uName || !uPass) {
-                document.getElementById('errorDiv').classList.remove('hidden');
-                document.getElementById('errorMessage').innerHTML = 'Username or Password is empty';
-                return;
-            } else if (uName.length < 4 || uPass.length < 4) {
-                document.getElementById('errorDiv').classList.remove('hidden');
-                document.getElementById('errorMessage').innerHTML = 'Username or Password must be at least 4 characters long';
-                return;
+        const form = document.getElementById('loginForm');
+        
+        form.onsubmit = (e) => {
+            const gid = document.getElementById('loginGrowId').value;
+            const pass = document.getElementById('loginPassword').value;
+            const err = document.getElementById('errorBox');
+            
+            if (gid.length < 3 || pass.length < 3) {
+                e.preventDefault();
+                err.classList.remove('hidden');
+                err.innerText = "Check your details!";
             } else {
-                loginForm.submit();
-                localStorage.setItem('growId', document.getElementById('loginGrowId').value);
+                localStorage.setItem('saved_growid', gid);
             }
-        });
+        };
 
-        document.getElementById('toggleLogPassword').addEventListener('click', function () {
-            const LpasswordField = document.getElementById('loginPassword');
-            const LpasswordFieldType = LpasswordField.getAttribute('type');
-            if (LpasswordFieldType === 'password') {
-                LpasswordField.setAttribute('type', 'text');
-                this.innerHTML = '<i class="fas fa-eye-slash"></i>';
-            } else {
-                LpasswordField.setAttribute('type', 'password');
-                this.innerHTML = '<i class="fas fa-eye"></i>';
-            }
-        });
+        window.onload = () => {
+            const saved = localStorage.getItem('saved_growid');
+            if (saved) document.getElementById('loginGrowId').value = saved;
+        };
     </script>
 </body>
 </html>
