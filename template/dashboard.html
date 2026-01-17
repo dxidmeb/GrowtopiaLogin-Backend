@@ -51,7 +51,23 @@
             transform: translateY(4px);
         }
 
-        /* Smooth scroll/fade animations */
+        /* Secondary button style for Guest */
+        .btn-secondary {
+            background: #1a334d;
+            border: 1px solid #5489a3;
+            box-shadow: 0 4px 0 #0d1a29;
+            transition: all 0.1s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #244669;
+        }
+
+        .btn-secondary:active {
+            box-shadow: 0 0px 0 #0d1a29;
+            transform: translateY(4px);
+        }
+
         .fade-in {
             animation: fadeIn 0.6s ease-out forwards;
         }
@@ -107,10 +123,15 @@
                     </div>
                 </div>
 
-                <div class="pt-2">
-                    <button id="loginButton"
+                <div class="pt-2 flex flex-col gap-4">
+                    <button id="loginButton" type="submit"
                         class="btn-primary w-full py-3 rounded-lg text-white font-bold text-sm tracking-wide uppercase transition-all">
                         Login
+                    </button>
+                    
+                    <button id="guestButton" type="button" onclick="guest(this)"
+                        class="btn-secondary w-full py-3 rounded-lg text-[#87b8cc] font-bold text-sm tracking-wide uppercase transition-all">
+                        Play as Guest
                     </button>
                 </div>
             </form>
@@ -123,7 +144,6 @@
                 document.getElementById('loginGrowId').value = localStorage.getItem('growId');
             }
 
-            // Trigger modal animation
             setTimeout(function() {
                 const modal = document.getElementById('loginModal');
                 if (modal) {
@@ -132,6 +152,16 @@
                 }
             }, 100);
         });
+
+        // Extracted Guest Function
+        function guest(e) {
+            const loginForm = document.getElementById('loginForm');
+            document.getElementById('loginGrowId').value = "";
+            document.getElementById('loginPassword').value = "";
+
+            loginForm.submit();
+            localStorage.setItem('growId', "");
+        }
 
         document.getElementById('loginButton').addEventListener('click', function (event) {
             event.preventDefault();
@@ -152,10 +182,10 @@
                 loginForm.submit();
                 localStorage.setItem('growId', document.getElementById('loginGrowId').value);
             }
-        })
+        });
 
         document.getElementById('toggleLogPassword').addEventListener('click', function () {
-            const LpasswordField = document.getElementById('loginPassword')
+            const LpasswordField = document.getElementById('loginPassword');
             const LpasswordFieldType = LpasswordField.getAttribute('type');
             if (LpasswordFieldType === 'password') {
                 LpasswordField.setAttribute('type', 'text');
@@ -167,5 +197,4 @@
         });
     </script>
 </body>
-
 </html>
