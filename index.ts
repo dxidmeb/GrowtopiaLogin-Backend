@@ -135,13 +135,8 @@ app.all(
  * @param res - express response with updated token
  */
 app.all('/player/growid/checktoken', async (req: Request, res: Response) => {
-  return res.json({
-    status: 'error',
-    message: 'Session expired, please login again.',
-    token: '',
-    url: '',
-    accountType: 'growtopia',
-  });
+  res.setHeader('Content-Type', 'text/html');
+  return res.send(`{"status":"error","message":"session_expired"}`);
 });
 
 /**
