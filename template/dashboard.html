@@ -3,120 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Login</title>
+    <!-- Tailwind CSS for rapid, modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom config for specific brand colors and fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        ubuntu: ['Ubuntu', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
 
+        /* Base Resets & Custom Scrollbar */
         body {
             font-family: 'Ubuntu', sans-serif;
-            background: transparent;
+            background-color: transparent;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             height: 100vh;
             overflow: hidden;
-        }
-
-        /* Classic GT Dialog Box */
-        .gt-dialog {
-            width: 300px;
-            background-color: #2b4d6d;
-            border: 4px solid #87b8cc;
-            border-radius: 10px;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.4);
-            padding: 20px;
-        }
-
-        .gt-title {
             color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 2px 2px 0px #000;
-            margin-bottom: 15px;
         }
 
-        .gt-label {
-            color: #FFC045;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .gt-input {
-            background-color: #1a334d;
-            border: 2px solid #5489a3;
-            border-radius: 6px;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            font-size: 14px;
-            outline: none;
-            margin-bottom: 12px;
-        }
-
-        /* Cyan Connect Button */
-        .gt-btn-main {
-            background: linear-gradient(180deg, #00d4ff 0%, #008ecc 100%);
-            border: 2px solid #ffffff;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            padding: 12px;
-            width: 100%;
-            text-shadow: 1px 1px 2px #000;
-            box-shadow: 0 4px 0 #005f8f;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .gt-btn-main:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #005f8f;
-        }
-
-        /* Register Button */
-        .gt-btn-register {
-            background: #4a6a8a;
-            border: 2px solid #87b8cc;
-            border-radius: 8px;
-            color: #d1e5ef;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 8px;
-            width: 100%;
-            margin-top: 10px;
-            text-transform: uppercase;
-            cursor: pointer;
+        /* Smooth Input Autofill Styling Override */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #1D5A73 inset !important;
+            -webkit-text-fill-color: white !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
     </style>
 </head>
-<body>
+<body class="relative flex items-center justify-center min-h-screen antialiased">
 
-    <div class="gt-dialog">
-        <div class="gt-title">SERVER LOGIN</div>
+    <!-- Login Dialog Container -->
+    <div class="relative z-10 w-[450px] max-w-[95vw] px-8 py-8 mx-4 bg-[#2A4B66] border-[1.5px] border-cyan-200 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.6)]">
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-xl font-bold tracking-wide text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                Log in with your Account
+            </h1>
+        </div>
 
-        <form id="loginForm" method="POST" action="/player/growid/login/validate">
+        <!-- EXACT SAME FORM FUNCTIONALITY -->
+        <form id="loginForm" method="POST" action="/player/growid/login/validate" class="flex flex-col">
+            <!-- Hidden original inputs -->
             <input name="type" value="log" type="hidden" />
             <input name="_token" value="{{ data }}" type="hidden" />
 
-            <label class="gt-label">GrowID</label>
-            <input type="text" name="growId" id="loginGrowId" class="gt-input" placeholder="Name">
+            <!-- GrowID Field -->
+            <div class="mb-3">
+                <label for="loginGrowId" class="sr-only">GrowID</label>
+                <input type="text" name="growId" id="loginGrowId" placeholder="Your Account GrowID"
+                    class="w-full px-3 py-2.5 text-sm text-white transition-all duration-300 border border-cyan-300 rounded-md outline-none bg-[#1D5A73] placeholder:text-[#A0B0C0] shadow-[inset_0_4px_6px_-1px_rgba(0,0,0,0.5)] focus:border-white focus:ring-1 focus:ring-white">
+            </div>
 
-            <label class="gt-label">Password</label>
-            <input type="password" name="password" id="loginPassword" class="gt-input" placeholder="Password">
+            <!-- Password Field -->
+            <div class="mb-1">
+                <label for="loginPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="loginPassword" placeholder="Your Account Password"
+                    class="w-full px-3 py-2.5 text-sm text-white transition-all duration-300 border border-cyan-300 rounded-md outline-none bg-[#1D5A73] placeholder:text-[#A0B0C0] shadow-[inset_0_4px_6px_-1px_rgba(0,0,0,0.5)] focus:border-white focus:ring-1 focus:ring-white">
+            </div>
 
-            <button type="submit" class="gt-btn-main">Connect</button>
+            <!-- Register Button / Subtext Link -->
+            <button type="button" onclick="register(this)" 
+                class="my-4 text-[12px] font-bold tracking-wide text-[#FF4500] drop-shadow-[1px_1px_0px_rgba(0,0,0,1)] hover:brightness-110 active:scale-95 transition-all text-center bg-transparent border-none cursor-pointer outline-none">
+                Don't have an account? Register!
+            </button>
             
-            <button type="button" onclick="register(this)" class="gt-btn-register">
-                Register
+            <!-- Connect Button -->
+            <button type="submit" 
+                class="w-full py-3 text-sm font-bold tracking-widest text-white drop-shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] transition-all duration-100 transform rounded-md outline-none bg-[#00BFFF] shadow-[0_5px_0_0_rgba(0,0,0,1),inset_0_2px_0_0_rgba(255,255,255,0.5)] hover:bg-[#1ac6ff] active:translate-y-[5px] active:shadow-[0_0_0_0_rgba(0,0,0,1),inset_0_2px_0_0_rgba(255,255,255,0.5)]">
+                Log in
             </button>
         </form>
     </div>
 
+    <!-- EXACT SAME JAVASCRIPT LOGIC -->
     <script>
         // Form submit logic
         document.getElementById('loginForm').onsubmit = function() {
