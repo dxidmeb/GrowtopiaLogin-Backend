@@ -166,8 +166,9 @@ app.all(
       }
 
       let decodeRefreshToken = Buffer.from(refreshToken, 'base64').toString(
-        'utf-8',
-      );
+  'utf-8',
+);
+console.log('[DEBUG] decodeRefreshToken:', decodeRefreshToken);
 
       const token = Buffer.from(
         decodeRefreshToken.replace(
