@@ -135,7 +135,10 @@ app.all(
  * @param res - express response with updated token
  */
 app.all('/player/growid/checktoken', async (req: Request, res: Response) => {
-  return res.redirect(307, '/player/growid/validate/checktoken');
+  return res.json({
+    status: 'error',
+    message: 'Session expired, please login again.',
+  });
 });
 
 /**
