@@ -138,6 +138,9 @@ app.all('/player/growid/checktoken', async (req: Request, res: Response) => {
   return res.json({
     status: 'error',
     message: 'Session expired, please login again.',
+    token: '',
+    url: '',
+    accountType: 'growtopia',
   });
 });
 
